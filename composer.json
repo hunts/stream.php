@@ -1,6 +1,6 @@
 {
     "name": "Stream.php",
-    "description": "PHP implementation of Java Stream API",
+    "description": "PHP implementation of API style like Java Stream API and .NET Linq",
     "keywords": ["streaming api", "php", "stream", "linq"],
     "type": "library",
     "license": "MIT",
