@@ -1,0 +1,12 @@
+# Project
+vendor
+composer.lock
+
+# build
+build
+
+# IDE
+.idea
+
+# OS
+.DS_Store
