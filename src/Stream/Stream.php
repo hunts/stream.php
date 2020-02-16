@@ -2,25 +2,30 @@
 /**
  * This file is part of the Stream package.
  *
- * (c) Hunts Chen <hunts.c@gmail.com>
+ * (c) Minghang Chen <chen@minghang.dev>
  */
 
 namespace Stream;
 
+use ArrayIterator;
+use Countable;
+use Exception;
+use InvalidArgumentException;
+use Iterator;
+use IteratorAggregate;
 use Stream\Traits\IteratorExtension;
-
 
 /**
  * Stream Class.
  *
  * Provide streaming API to marshal collection.
  */
-class Stream implements \Iterator, \Countable
+class Stream implements Iterator, Countable
 {
     use IteratorExtension;
 
     /**
-     * @var \Iterator
+     * @var Iterator
      */
     private $it;
 
@@ -70,41 +75,36 @@ class Stream implements \Iterator, \Countable
     private $sortPended = false;
 
     /**
-     * @param \Iterator $it
+     * @param Iterator $it
      */
-    private function __construct(\Iterator $it)
+    private function __construct(Iterator $it)
     {
         $this->it = $it;
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getIterator()
-    {
-        return $this;
-    }
-
-    /**
      *
      *
-     * @param \Iterator|\IteratorAggregate|array $source The source object that want to become a stream.
+     * @param Iterator|IteratorAggregate|array $source The source object that want to become a stream.
+     *
      * @return Stream
+     *
+     * @throws Exception
      */
-    final public static function from($source)
+    final public static function from($source): Stream
     {
         $it = null;
 
         if (is_array($source)) {
-            $it = new \ArrayIterator($source);
-        } else if ($source instanceof \Iterator) {
+            $it = new ArrayIterator($source);
+        } else if ($source instanceof Iterator) {
             $it = $source;
-        } else if ($source instanceof \IteratorAggregate) {
+        } else if ($source instanceof IteratorAggregate) {
             $it = $source->getIterator();
         }
 
         if ($it === null) {
-            throw new \InvalidArgumentException('invalid source type. only accepts array, Iterator, IteratorAggregate');
+            throw new InvalidArgumentException('invalid source type. only accepts array, Iterator, IteratorAggregate');
         }
 
         return new self($it);
@@ -114,7 +114,7 @@ class Stream implements \Iterator, \Countable
      *
      * @return bool
      */
-    private function acceptIt()
+    private function acceptIt(): bool
     {
         if ($this->sortPended) {
             $this->multiSort();
@@ -137,7 +137,7 @@ class Stream implements \Iterator, \Countable
 
         $accept = true;
 
-        foreach($this->filters as $filter) {
+        foreach ($this->filters as $filter) {
             if (!$filter($this->it->current())) {
                 $accept = false;
                 break;
@@ -232,13 +232,15 @@ class Stream implements \Iterator, \Countable
     /**
      *
      * @param callable $predicate
+     *
      * @return Stream returns self
      */
-    public function filter(callable $predicate)
+    public function filter(callable $predicate): Stream
     {
         if (isset($predicate)) {
             $this->filters[] = $predicate;
         }
+
         return $this;
     }
 
@@ -246,11 +248,13 @@ class Stream implements \Iterator, \Countable
      *
      *
      * @param callable $mapper
+     *
      * @return Stream returns a new Stream object.
      */
-    public function map(callable $mapper = null)
+    public function map(callable $mapper = null): Stream
     {
         $this->mapper = $mapper;
+
         return new self($this);
     }
 
@@ -258,7 +262,7 @@ class Stream implements \Iterator, \Countable
      * @param int $skip
      * @return Stream returns self
      */
-    public function skip($skip)
+    public function skip($skip): Stream
     {
         $this->skip = $skip;
         return $this;
@@ -268,7 +272,7 @@ class Stream implements \Iterator, \Countable
      * @param int $limit
      * @return Stream returns self
      */
-    public function limit($limit)
+    public function limit($limit): Stream
     {
         $this->limit = $limit;
         return $this;
@@ -276,11 +280,12 @@ class Stream implements \Iterator, \Countable
 
     /**
      * @param callable|null $comparator
+     *
      * @return Stream
      */
-    public function distinct(callable $comparator = null)
+    public function distinct(callable $comparator = null): Stream
     {
-        $generator = function() use($comparator) {
+        $generator = function () use ($comparator) {
             $set = [];
             foreach ($this as $key => $value) {
                 if (isset($set[$value])) {
@@ -298,25 +303,27 @@ class Stream implements \Iterator, \Countable
     /**
      * @return bool
      */
-    public function hasSortPended()
+    public function hasSortPended(): bool
     {
         return $this->sortPended;
     }
 
     /**
      * @param Comparator|null $comparator
+     *
      * @return Stream
      */
-    public function sort(Comparator $comparator = null)
+    public function sort(Comparator $comparator = null): Stream
     {
         return $this->sortByFlag(SortOrder::ASC, $comparator);
     }
 
     /**
      * @param Comparator|null $comparator
+     *
      * @return Stream
      */
-    public function sortByDescending(Comparator $comparator = null)
+    public function sortByDescending(Comparator $comparator = null): Stream
     {
         return $this->sortByFlag(SortOrder::DESC, $comparator);
     }
@@ -324,15 +331,16 @@ class Stream implements \Iterator, \Countable
     /**
      * @param int $sortOrder
      * @param Comparator|null $comparator
+     *
      * @return Stream
      */
-    private function sortByFlag($sortOrder, Comparator $comparator = null)
+    private function sortByFlag($sortOrder, Comparator $comparator = null): Stream
     {
         $command = new SortingCommand($sortOrder, $comparator);
 
         // in case of multi-sort. That is stream->sort()->sort()->...
         if (($this->it instanceof Stream) && $this->it->sortPended) {
-            if (!isset($comparator) || is_null(end($this->it->sortingCommands)->getComparator())) {
+            if ($comparator === null || end($this->it->sortingCommands)->getComparator() === null) {
                 $this->it->sortingCommands[0] = $command;
             } else {
                 $this->it->sortingCommands[] = $command;
@@ -363,7 +371,7 @@ class Stream implements \Iterator, \Countable
         // set pended to false before toArray is performed to avoid infinite loop.
         $this->sortPended = false;
 
-        $itArray = ($this->it instanceof \ArrayIterator)
+        $itArray = ($this->it instanceof ArrayIterator)
             ? $this->it->getArrayCopy()
             : $this->toArray();
 
@@ -372,8 +380,9 @@ class Stream implements \Iterator, \Countable
             $command = $this->sortingCommands[0];
 
             if (!is_null($command->getComparator())) {
-                usort($itArray, function($first, $second) use($command) {
-                    return -$command->getSortOrder() * $command->getComparator()->compare($first, $second); }
+                usort($itArray, function ($first, $second) use ($command) {
+                    return -$command->getSortOrder() * $command->getComparator()->compare($first, $second);
+                }
                 );
             } else {
                 if ($command->getSortOrder() === SortOrder::ASC) {
@@ -386,7 +395,7 @@ class Stream implements \Iterator, \Countable
             $itArray = $this->quickSort($itArray, $this->sortingCommands);
         }
 
-        $this->it = new \ArrayIterator($itArray);
+        $this->it = new ArrayIterator($itArray);
 
     }
 
@@ -401,8 +410,8 @@ class Stream implements \Iterator, \Countable
             return $array;
         }
 
-        $left = array();
-        $right = array();
+        $left = [];
+        $right = [];
 
         $pivot_key = key($array);
         $pivot = array_shift($array);
@@ -431,5 +440,3 @@ class Stream implements \Iterator, \Countable
         return array_merge($this->quickSort($left, $sortingCommands), array($pivot_key => $pivot), $this->quickSort($right, $sortingCommands));
     }
 }
-
-?>

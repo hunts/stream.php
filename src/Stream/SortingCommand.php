@@ -2,7 +2,7 @@
 /**
  * This file is part of the Stream package.
  *
- * (c) Hunts Chen <hunts.c@gmail.com>
+ * (c) Minghang Chen <chen@minghang.dev>
  */
 
 namespace Stream;
@@ -26,7 +26,7 @@ class SortingCommand
      * @param int $sortOrder Accepts one of SortOrder::ASC or SortOrder::DESC.
      * @param Comparator $comparator [optional] Comparator to compare two items which performing sort.
      */
-    public function __construct($sortOrder = SortOrder::ASC, Comparator $comparator = null)
+    public function __construct(int $sortOrder = SortOrder::ASC, Comparator $comparator = null)
     {
         $this->comparator = $comparator;
         $this->sortOrder = $sortOrder;
@@ -37,7 +37,7 @@ class SortingCommand
      *
      * @return int
      */
-    public function getSortOrder()
+    public function getSortOrder(): int
     {
         return $this->sortOrder;
     }
@@ -45,12 +45,10 @@ class SortingCommand
     /**
      * Returns comparator object.
      *
-     * @return Comparator
+     * @return Comparator|null
      */
-    public function getComparator()
+    public function getComparator(): ?Comparator
     {
         return $this->comparator;
     }
 }
-
-?>

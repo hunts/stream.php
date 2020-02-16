@@ -1,17 +1,21 @@
 language: php
 
-matrix:
-    include:
-        - php: 5.6
-    fast_finish: true
+php:
+  - 7.2
+  - 7.3
 
 before_script:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
 
 script:
-  - mkdir -p build/logs
-  - composer test
+  - ./vendor/bin/parallel-lint . --exclude vendor
+  - composer test -- --coverage-clover=build/coverage.xml
 
-after_script:
-  - php vendor/bin/coveralls
+branches:
+  only:
+    - master
+
+cache:
+  directories:
+    - $HOME/.composer/cache

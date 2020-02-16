@@ -2,18 +2,17 @@
 /**
  * This file is part of the Stream package.
  *
- * (c) Hunts Chen <hunts.c@gmail.com>
+ * (c) Minghang Chen <chen@minghang.dev>
  */
 
 namespace Stream;
-
 
 /**
  * Static factory for creating comparator object.
  */
 class ComparatorFactory implements Comparator
 {
-    private static $comparators = array();
+    private static $comparators = [];
 
     private $compareFunc;
 
@@ -25,7 +24,7 @@ class ComparatorFactory implements Comparator
     /**
      * @inheritDoc
      */
-    public function compare($first, $second)
+    public function compare($first, $second): int
     {
         return call_user_func($this->compareFunc, $first, $second);
     }
@@ -33,18 +32,20 @@ class ComparatorFactory implements Comparator
     /**
      *
      * @param callable $compareFunc Custom compare function.
+     *
      * @return Comparator
      */
-    public static function create(callable $compareFunc)
+    public static function create(callable $compareFunc): Comparator
     {
         return new self($compareFunc);
     }
 
     /**
      * @param $isCaseSensitive
+     *
      * @return Comparator
      */
-    public static function stringComparator($isCaseSensitive = false)
+    public static function stringComparator(bool $isCaseSensitive = false): Comparator
     {
         $cacheKey = 'b_' . $isCaseSensitive;
 
@@ -57,14 +58,16 @@ class ComparatorFactory implements Comparator
                 return strcasecmp($first, $second);
             });
         }
+
         return self::$comparators[$cacheKey];
     }
 
     /**
      * @param number $epsilon
+     *
      * @return Comparator
      */
-    public static function floatComparator($epsilon)
+    public static function floatComparator($epsilon): Comparator
     {
         $cacheKey = 'f_' . $epsilon;
 
@@ -88,7 +91,7 @@ class ComparatorFactory implements Comparator
     /**
      * @return Comparator
      */
-    public static function intComparator()
+    public static function intComparator(): Comparator
     {
         return self::floatComparator(0);
     }

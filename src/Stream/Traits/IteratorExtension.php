@@ -2,15 +2,14 @@
 /**
  * This file is part of the Stream package.
  *
- * (c) Hunts Chen <hunts.c@gmail.com>
+ * (c) Minghang Chen <chen@minghang.dev>
  */
-
 
 namespace Stream\Traits;
 
+use Exception;
 use Stream\Comparator;
 use Stream\Stream;
-
 
 /**
  * Useful methods for class that is going to implements Iterator interface.
@@ -57,8 +56,10 @@ trait IteratorExtension
      * Return stream of current iterator object. If this object is stream, just return itself.
      *
      * @return Stream
+     *
+     * @throws Exception
      */
-    public function streamify()
+    public function streamify(): Stream
     {
         if ($this instanceof Stream) {
             return $this;
@@ -71,19 +72,20 @@ trait IteratorExtension
      *
      *
      * @param callable|null $mapper [optional] mapper function.
-     *  the mapper can return array() with 2 elements.
+     *  the mapper can return array with 2 elements.
      *  First one to be used as $value, second one as $key.
+     *
      * @return array
      */
-    public function toArray(callable $mapper = null)
+    public function toArray(callable $mapper = null): array
     {
-        if (!isset($mapper)) {
+        if ($mapper === null) {
             return iterator_to_array($this);
         }
 
-        $result = array();
+        $result = [];
 
-        $this->each(function($item) use($result, $mapper) {
+        $this->each(function ($item) use ($result, $mapper) {
             list($value, $key) = $mapper($item);
             if ($key === null) {
                 $result[] = $value;
@@ -99,9 +101,10 @@ trait IteratorExtension
      *
      *
      * @param callable $predicate
+     *
      * @return bool
      */
-    public function any(callable $predicate)
+    public function any(callable $predicate): bool
     {
         if (!isset($predicate)) {
             return true;
@@ -123,9 +126,10 @@ trait IteratorExtension
      *
      *
      * @param callable $predicate
+     *
      * @return bool
      */
-    public function all(callable $predicate)
+    public function all(callable $predicate): bool
     {
         if (!isset($predicate)) {
             return true;
@@ -147,6 +151,7 @@ trait IteratorExtension
      * Return the first element of matched items.
      *
      * @param callable|null $predicate [optional] predicate expression.
+     *
      * @return mixed Can return any type on success or null on nothing found.
      */
     public function first(callable $predicate = null)
@@ -167,6 +172,7 @@ trait IteratorExtension
      * Return the last element of matched items.
      *
      * @param callable $predicate [optional] predicate expression.
+     *
      * @return mixed Can return any type on success or null on nothing found.
      */
     public function last(callable $predicate = null)
@@ -191,24 +197,29 @@ trait IteratorExtension
      * Return the total number of matched elements.
      *
      * @param callable $predicate [optional] predicate expression.
+     *
      * @return int
      */
-    public function count(callable $predicate = null)
+    public function count(callable $predicate = null): int
     {
         if ($predicate === null) {
             return iterator_count($this);
         }
 
-        return $this->reduce(function($total, $item) { return $total + 1; }, 0, $predicate);
+        return $this->reduce(function ($total, $item) {
+            return $total + 1;
+        }, 0, $predicate);
     }
 
     /**
      *
      * @param callable $callback
      * @param callable $predicate [optional] predicate expression.
+     *
      * @return void
      */
-    public function each(callable $callback, callable $predicate = null) {
+    public function each(callable $callback, callable $predicate = null)
+    {
         foreach ($this as $item) {
             if (isset($predicate) && !$predicate($item)) {
                 continue;
@@ -222,12 +233,13 @@ trait IteratorExtension
      * Return average value of matched items.
      *
      * @param callable $predicate [optional] predicate expression.
+     *
      * @return number Average.
      */
     public function average(callable $predicate = null)
     {
         $size = 0;
-        $total = $this->reduce(function($a, $b) use(&$size) {
+        $total = $this->reduce(function ($a, $b) use (&$size) {
             $size++;
             return $a + $b;
         }, 0, $predicate);
@@ -243,11 +255,12 @@ trait IteratorExtension
      * Return sum value of matched items.
      *
      * @param callable $predicate [optional] predicate expression.
+     *
      * @return number Sum.
      */
     public function sum(callable $predicate = null)
     {
-        return $this->reduce(function($a, $b) {
+        return $this->reduce(function ($a, $b) {
             return $a + $b;
         }, null, $predicate);
     }
@@ -261,7 +274,7 @@ trait IteratorExtension
      */
     public function max(Comparator $comparator, callable $predicate = null)
     {
-        return $this->reduce(function($a, $b) use($comparator) {
+        return $this->reduce(function ($a, $b) use ($comparator) {
             if ($comparator->compare($a, $b) >= 0) {
                 return $a;
             }
@@ -274,11 +287,12 @@ trait IteratorExtension
      *
      * @param Comparator $comparator
      * @param callable $predicate [optional] predicate expression.
+     *
      * @return mixed
      */
     public function min(Comparator $comparator, callable $predicate = null)
     {
-        return $this->reduce(function($a, $b) use($comparator) {
+        return $this->reduce(function ($a, $b) use ($comparator) {
             if ($comparator->compare($a, $b) <= 0) {
                 return $a;
             }
@@ -291,18 +305,23 @@ trait IteratorExtension
      * using the provided identity value and an associative
      * accumulation function, and returns the reduced value.
      *
-     * @param callable $accumulation an associative, non-interfering, stateless function for combining two values.
-     * @param mixed $identity [optional] the identity value for the accumulating function
-     * @param callable $predicate [optional] predicate expression.
+     * @param callable $accumulation
+     *  An associative, non-interfering, stateless function
+     *  for combining two values.
+     * @param mixed $identity [optional]
+     *  The identity value for the accumulating function.
+     * @param callable $predicate [optional]
+     *  A predicate expression.
+     *
      * @return mixed the result of the reduction
      */
     public function reduce(callable $accumulation, $identity = null, callable $predicate = null)
     {
         $result = $identity;
 
-        $this->each(function($item) use(&$result, $accumulation) {
+        $this->each(function ($item) use (&$result, $accumulation) {
 
-            if(!isset($result)) {
+            if (!isset($result)) {
                 $result = $item;
                 return;
             }
@@ -314,5 +333,3 @@ trait IteratorExtension
         return $result;
     }
 }
-
-?>

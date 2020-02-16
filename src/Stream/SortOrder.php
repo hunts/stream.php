@@ -2,24 +2,23 @@
 /**
  * This file is part of the Stream package.
  *
- * (c) Hunts Chen <hunts.c@gmail.com>
+ * (c) Minghang Chen <chen@minghang.dev>
  */
 
 namespace Stream;
 
-
 /**
  * SortOrder constants
  */
-abstract class SortOrder
+final class SortOrder
 {
     /**
      * ASC = -1
      */
-    const ASC = -1;
+    public const ASC = -1;
 
     /**
      * DESC = 1
      */
-    const DESC = 1;
+    public const DESC = 1;
 }

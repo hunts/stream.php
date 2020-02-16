@@ -2,7 +2,7 @@
 [![Coverage Status][coveralls-image]][coveralls-url]
 
 # About
-  Stream.php is a PHP implementation of API style like Java Stream API and .NET Linq.
+  Stream.php is a PHP implementation of collection query API style like Java Stream API and .NET Linq.
 
 [travis-url]: https://travis-ci.org/hunts/stream-php
 [travis-image]: https://api.travis-ci.org/hunts/stream-php.svg

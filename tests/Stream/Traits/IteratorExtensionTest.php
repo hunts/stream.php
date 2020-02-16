@@ -2,20 +2,22 @@
 /**
  * This file is part of the Stream package.
  *
- * (c) Hunts Chen <hunts.c@gmail.com>
+ * (c) Minghang Chen <chen@minghang.dev>
  */
 
 namespace Stream\Traits;
 
+use PHPUnit\Framework\TestCase;
 use Stream\ComparatorFactory;
 use Stream\IteratorClass;
+
 /**
  * Test cases for class: Stream\Traits\IteratorExtension
  */
-class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
+class IteratorExtensionTest extends TestCase
 {
     /**
-     * @param \Iterator $it
+     * @param IteratorClass $it
      * @param mixed $first
      * @param mixed $last
      * @param int $count
@@ -23,13 +25,13 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataProvider
      */
-    public function testFirst(\Iterator $it, $first, $last, $count, callable $predicate = NULL)
+    public function testFirst(IteratorClass $it, $first, $last, $count, callable $predicate = NULL)
     {
         $this->assertEquals($first, $it->first($predicate));
     }
 
     /**
-     * @param \Iterator $it
+     * @param IteratorClass $it
      * @param mixed $first
      * @param mixed $last
      * @param int $count
@@ -37,13 +39,13 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataProvider
      */
-    public function testLast(\Iterator $it, $first, $last, $count, callable $predicate = null)
+    public function testLast(IteratorClass $it, $first, $last, $count, callable $predicate = null)
     {
         $this->assertEquals($last, $it->last($predicate));
     }
 
     /**
-     * @param \Iterator $it
+     * @param IteratorClass $it
      * @param mixed $first
      * @param mixed $last
      * @param int $count
@@ -51,13 +53,13 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataProvider
      */
-    public function testCount(\Iterator $it, $first, $last, $count, callable $predicate = null)
+    public function testCount(IteratorClass $it, $first, $last, $count, callable $predicate = null)
     {
         $this->assertEquals($count, $it->count($predicate));
     }
 
     /**
-     * @param \Iterator $it
+     * @param IteratorClass $it
      * @param mixed $first
      * @param mixed $last
      * @param int $count
@@ -65,9 +67,9 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataProvider
      */
-    public function testEach(\Iterator $it, $first, $last, $count, callable $predicate = null)
+    public function testEach(IteratorClass $it, $first, $last, $count, callable $predicate = null)
     {
-        $it->each(function($item) use(&$count) {
+        $it->each(function ($item) use (&$count) {
             $count--;
         }, $predicate);
 
@@ -75,7 +77,7 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param \Iterator $it
+     * @param IteratorClass $it
      * @param number $min
      * @param number $max
      * @param number $avg
@@ -84,13 +86,13 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider numberDataProvider
      */
-    public function testMin(\Iterator $it, $min, $max, $avg, $sum, callable $predicate = null)
+    public function testMin(IteratorClass $it, $min, $max, $avg, $sum, callable $predicate = null)
     {
-        $this->assertEquals($min, $it->min(ComparatorFactory::intComparator(),$predicate));
+        $this->assertEquals($min, $it->min(ComparatorFactory::intComparator(), $predicate));
     }
 
     /**
-     * @param \Iterator $it
+     * @param IteratorClass $it
      * @param number $min
      * @param number $max
      * @param number $avg
@@ -99,13 +101,13 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider numberDataProvider
      */
-    public function testMax(\Iterator $it, $min, $max, $avg, $sum, callable $predicate = null)
+    public function testMax(IteratorClass $it, $min, $max, $avg, $sum, callable $predicate = null)
     {
         $this->assertEquals($max, $it->max(ComparatorFactory::intComparator(), $predicate));
     }
 
     /**
-     * @param \Iterator $it
+     * @param IteratorClass $it
      * @param number $min
      * @param number $max
      * @param number $avg
@@ -114,13 +116,13 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider numberDataProvider
      */
-    public function testAverage(\Iterator $it, $min, $max, $avg, $sum, callable $predicate = null)
+    public function testAverage(IteratorClass $it, $min, $max, $avg, $sum, callable $predicate = null)
     {
         $this->assertEquals($avg, $it->average($predicate));
     }
 
     /**
-     * @param \Iterator $it
+     * @param IteratorClass $it
      * @param number $min
      * @param number $max
      * @param number $avg
@@ -129,7 +131,7 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider numberDataProvider
      */
-    public function testSum(\Iterator $it, $min, $max, $avg, $sum, callable $predicate = null)
+    public function testSum(IteratorClass $it, $min, $max, $avg, $sum, callable $predicate = null)
     {
         $this->assertEquals($sum, $it->sum($predicate));
     }
@@ -145,19 +147,19 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
         $func[3] = 'xyz';
         $func[4] = 'kkx';
 
-        return array(
-            array($emptyIterator, null, null, 0),
-            array($func, '0', 'kkx', 5),
-            array($func, 'x', 'kkx', 3, function($item) {
+        return [
+            [$emptyIterator, null, null, 0],
+            [$func, '0', 'kkx', 5],
+            [$func, 'x', 'kkx', 3, function ($item) {
                 return strpos($item, 'x') !== false;
-            }),
-            array($func, null, null, 1, function($item) {
+            }],
+            [$func, null, null, 1, function ($item) {
                 return $item === null;
-            }),
-            array($func, '0', 'kkx', 4, function($item) {
+            }],
+            [$func, '0', 'kkx', 4, function ($item) {
                 return $item !== null;
-            })
-        );
+            }]
+        ];
     }
 
     public function numberDataProvider()
@@ -171,14 +173,12 @@ class IteratorExtensionTest extends \PHPUnit_Framework_TestCase
         $func[3] = 3;
         $func[4] = 4;
 
-        return array(
-            array($emptyIterator, null, null, null, null),
-            array($func, -2, 7, 2.6, 13),
-            array($func, 1, 7, 3.75, 15, function($item) {
+        return [
+            [$emptyIterator, null, null, null, null],
+            [$func, -2, 7, 2.6, 13],
+            [$func, 1, 7, 3.75, 15, function ($item) {
                 return $item > 0;
-            }),
-        );
+            }],
+        ];
     }
 }
-
-?>
