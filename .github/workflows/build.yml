@@ -1,0 +1,36 @@
+name: Stream.php
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check environment
+      run: |
+        php --version
+        composer --version
+
+    - uses: actions/checkout@v2
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Lint code
+      run: ./vendor/bin/parallel-lint . --exclude vendor
+
+    - name: Run test suite
+      run: mkdir -p build/logs && composer test
+    
+    - name: Upload coverage results to Coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        export PATH=~/.composer/vendor/bin:$PATH
+        composer global -nq require cedx/coveralls
+        coveralls build/logs/clover.xml
