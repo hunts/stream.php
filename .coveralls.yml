@@ -1,2 +1,2 @@
 src_dir: src
-coverage_clover: build/coverage.xml
+coverage_clover: build/logs/coverage.xml

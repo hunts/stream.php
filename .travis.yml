@@ -10,7 +10,11 @@ before_script:
 
 script:
   - ./vendor/bin/parallel-lint . --exclude vendor
-  - composer test -- --coverage-clover=build/coverage.xml
+  - mkdir -p build/logs 
+  - composer test -- --coverage-clover=build/logs/coverage.xml
+
+after_success:
+- travis_retry php vendor/bin/php-coveralls
 
 branches:
   only:
