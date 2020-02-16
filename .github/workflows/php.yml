@@ -1,0 +1,23 @@
+name: Stream.php
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Lint code
+      run: ./vendor/bin/parallel-lint . --exclude vendor
+
+    - name: Run test suite
+      run: mkdir -p build/logs && composer test -- --coverage-clover=build/logs/coverage.xml
