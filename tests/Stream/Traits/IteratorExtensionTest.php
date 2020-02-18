@@ -12,10 +12,77 @@ use Stream\ComparatorFactory;
 use Stream\IteratorClass;
 
 /**
- * Test cases for class: Stream\Traits\IteratorExtension
+ * Test cases for trait: {@see IteratorExtension}
  */
 class IteratorExtensionTest extends TestCase
 {
+    /**
+     * @param IteratorClass $it
+     * @param mixed $first
+     * @param mixed $last
+     * @param int $count
+     * @param callable $predicate
+     *
+     * @dataProvider dataProvider
+     */
+    public function tesStreamify(IteratorClass $it, $first, $last, int $count, callable $predicate = NULL)
+    {
+        try {
+            $this->assertSame($it, $it->streamify());
+        }catch (\Exception $e) {
+            $this->fail($e->getMessage());
+        }
+    }
+
+    /**
+     * @param IteratorClass $it
+     * @param mixed $first
+     * @param mixed $last
+     * @param int $count
+     * @param callable $predicate
+     *
+     * @dataProvider dataProvider
+     */
+    public function tesToArray(IteratorClass $it, $first, $last, int $count, callable $predicate = NULL)
+    {
+        $arr = $it->toArray($predicate);
+
+        if ($count > 0) {
+            $this->assertSame($first, $arr[0]);
+            $this->assertSame($last, $arr[$count - 1]);
+        } else {
+            $this->assertEmpty($arr);
+        }
+    }
+
+    /**
+     * @param IteratorClass $it
+     * @param mixed $first
+     * @param mixed $last
+     * @param int $count
+     * @param callable $predicate
+     *
+     * @dataProvider dataProvider
+     */
+    public function testAny(IteratorClass $it, $first, $last, int $count, callable $predicate = NULL)
+    {
+        $this->assertEquals($count > 0, $it->any($predicate));
+    }
+
+    /**
+     * @param IteratorClass $it
+     * @param mixed $first
+     * @param mixed $last
+     * @param int $count
+     * @param callable $predicate
+     *
+     * @dataProvider dataProvider
+     */
+    public function testAll(IteratorClass $it, $first, $last, int $count, callable $predicate = NULL)
+    {
+        $this->assertEquals($count === $it->count(), $it->all($predicate));
+    }
+
     /**
      * @param IteratorClass $it
      * @param mixed $first
@@ -150,15 +217,9 @@ class IteratorExtensionTest extends TestCase
         return [
             [$emptyIterator, null, null, 0],
             [$func, '0', 'kkx', 5],
-            [$func, 'x', 'kkx', 3, function ($item) {
-                return strpos($item, 'x') !== false;
-            }],
-            [$func, null, null, 1, function ($item) {
-                return $item === null;
-            }],
-            [$func, '0', 'kkx', 4, function ($item) {
-                return $item !== null;
-            }]
+            [$func, 'x', 'kkx', 3, function ($item) { return strpos($item, 'x') !== false; }],
+            [$func, null, null, 1, function ($item) { return $item === null; }],
+            [$func, '0', 'kkx', 4, function ($item) { return $item !== null; }]
         ];
     }
 
@@ -176,9 +237,7 @@ class IteratorExtensionTest extends TestCase
         return [
             [$emptyIterator, null, null, null, null],
             [$func, -2, 7, 2.6, 13],
-            [$func, 1, 7, 3.75, 15, function ($item) {
-                return $item > 0;
-            }],
+            [$func, 1, 7, 3.75, 15, function ($item) { return $item > 0; }],
         ];
     }
 }

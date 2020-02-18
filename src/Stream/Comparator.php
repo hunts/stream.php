@@ -7,11 +7,27 @@
 
 namespace Stream;
 
+
 /**
  *
  */
 interface Comparator
 {
+    /**
+     * Flag: <i>NULL</i> is treated as zero value
+     */
+    public const NULL_AS_ZERO = 0b0;
+
+    /**
+     * Flag: <i>NULL</i> is treated less than zero value
+     */
+    public const NULL_LT_ZERO = 0b1;
+
+    /**
+     * Flag: <i>NULL</i> is treated greater then any non-null value
+     */
+    public const NULL_GT_ANY = 0b10;
+
     /**
      * @param mixed $first
      * @param mixed $second

@@ -100,17 +100,17 @@ trait IteratorExtension
     /**
      *
      *
-     * @param callable $predicate
+     * @param callable|null $predicate
      *
      * @return bool
      */
-    public function any(callable $predicate): bool
+    public function any(callable $predicate = null): bool
     {
-        if (!isset($predicate)) {
-            return true;
-        }
-
         $this->rewind();
+
+        if ($predicate === null) {
+            return $this->valid();
+        }
 
         while ($this->valid()) {
             if ($predicate($this->current())) {
@@ -125,13 +125,13 @@ trait IteratorExtension
     /**
      *
      *
-     * @param callable $predicate
+     * @param callable|null $predicate
      *
      * @return bool
      */
-    public function all(callable $predicate): bool
+    public function all(callable $predicate = null): bool
     {
-        if (!isset($predicate)) {
+        if ($predicate === null) {
             return true;
         }
 
