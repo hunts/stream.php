@@ -86,9 +86,9 @@ class Stream implements Iterator, Countable
      *
      * @param Iterator|IteratorAggregate|array $source The source object that want to become a stream.
      *
-     * @return Stream
+     * @return static
      */
-    final public static function from($source): Stream
+    final public static function from($source): self
     {
         $it = null;
 
@@ -104,7 +104,7 @@ class Stream implements Iterator, Countable
             throw new InvalidArgumentException('invalid source type. only accepts array, Iterator, IteratorAggregate');
         }
 
-        return new self($it);
+        return new static($it);
     }
 
     /**
@@ -253,6 +253,20 @@ class Stream implements Iterator, Countable
         $this->mapper = $mapper;
 
         return new self($this);
+    }
+
+    /**
+     *
+     *
+     * @param callable $mapper
+     *
+     * @return NumberStream returns a new NumberStream object.
+     */
+    public function mapToNumber(callable $mapper = null): NumberStream
+    {
+        $this->mapper = $mapper;
+
+        return new NumberStream($this);
     }
 
     /**

@@ -135,13 +135,11 @@ class IteratorExtensionTest extends TestCase
      * @param IteratorClass $it
      * @param number $min
      * @param number $max
-     * @param number $avg
-     * @param number $sum
      * @param callable $predicate
      *
      * @dataProvider numberDataProvider
      */
-    public function testMin(IteratorClass $it, $min, $max, $avg, $sum, callable $predicate = null)
+    public function testMin(IteratorClass $it, $min, $max, callable $predicate = null)
     {
         $this->assertEquals($min, $it->min(ComparatorFactory::intComparator(), $predicate));
     }
@@ -150,45 +148,13 @@ class IteratorExtensionTest extends TestCase
      * @param IteratorClass $it
      * @param number $min
      * @param number $max
-     * @param number $avg
-     * @param number $sum
      * @param callable $predicate
      *
      * @dataProvider numberDataProvider
      */
-    public function testMax(IteratorClass $it, $min, $max, $avg, $sum, callable $predicate = null)
+    public function testMax(IteratorClass $it, $min, $max, callable $predicate = null)
     {
         $this->assertEquals($max, $it->max(ComparatorFactory::intComparator(), $predicate));
-    }
-
-    /**
-     * @param IteratorClass $it
-     * @param number $min
-     * @param number $max
-     * @param number $avg
-     * @param number $sum
-     * @param callable $predicate
-     *
-     * @dataProvider numberDataProvider
-     */
-    public function testAverage(IteratorClass $it, $min, $max, $avg, $sum, callable $predicate = null)
-    {
-        $this->assertEquals($avg, $it->average($predicate));
-    }
-
-    /**
-     * @param IteratorClass $it
-     * @param number $min
-     * @param number $max
-     * @param number $avg
-     * @param number $sum
-     * @param callable $predicate
-     *
-     * @dataProvider numberDataProvider
-     */
-    public function testSum(IteratorClass $it, $min, $max, $avg, $sum, callable $predicate = null)
-    {
-        $this->assertEquals($sum, $it->sum($predicate));
     }
 
     public function dataProvider()
@@ -223,9 +189,9 @@ class IteratorExtensionTest extends TestCase
         $func[4] = 4;
 
         return [
-            [$emptyIterator, null, null, null, null],
-            [$func, -2, 7, 2.6, 13],
-            [$func, 1, 7, 3.75, 15, function ($item) { return $item > 0; }],
+            [$emptyIterator, null, null],
+            [$func, -2, 7],
+            [$func, 1, 7, function ($item) { return $item > 0; }],
         ];
     }
 }

@@ -10,7 +10,7 @@ namespace Stream;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test cases for class: Stream\Stream
+ * Test cases for class: {@see Stream}
  */
 class StreamTest extends TestCase
 {
@@ -78,6 +78,17 @@ class StreamTest extends TestCase
                     return strpos($item, 'php') !== false;
                 }
             )->count());
+    }
+
+    public function testMapToNumber()
+    {
+        $s = stream(['a', 'bb', 'ccc'])->mapToNumber(function ($value) {
+            return strlen($value);
+        });
+
+        $this->assertInstanceOf(NumberStream::class, $s);
+        $this->assertEquals(6, $s->sum());
+        $this->assertEquals(2, $s->average());
     }
 
     public function testDistinct()
