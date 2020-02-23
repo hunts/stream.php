@@ -146,7 +146,8 @@ trait IteratorExtension
     }
 
     /**
-     * Return the first element of matched items.
+     * Returns the first element of matched items, or null if the stream
+     * is empty.
      *
      * @param callable|null $predicate [optional] predicate expression.
      *
@@ -167,7 +168,8 @@ trait IteratorExtension
     }
 
     /**
-     * Return the last element of matched items.
+     * Returns the last element of matched items, or null if the stream
+     * is empty.
      *
      * @param callable $predicate [optional] predicate expression.
      *

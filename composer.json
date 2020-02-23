@@ -1,6 +1,6 @@
 {
-  "name": "minghang/stream.php",
-  "description": "PHP implementation of API style like Java Stream API and .NET Linq",
+  "name": "hunts/stream.php",
+  "description": "PHP implementation of collection query API similar to Java Stream API and .NET Linq",
   "keywords": [
     "streaming api",
     "php",

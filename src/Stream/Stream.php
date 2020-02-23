@@ -227,10 +227,13 @@ class Stream implements Iterator, Countable
     }
 
     /**
+     * Returns a stream consisting of the elements of this stream that
+     * match the given predicate.
      *
-     * @param callable $predicate
+     * @param callable $predicate a non-interfering, stateless predicate
+     *  to apply to each element to determine if it should be included
      *
-     * @return Stream returns self
+     * @return Stream the new stream
      */
     public function filter(callable $predicate): Stream
     {
