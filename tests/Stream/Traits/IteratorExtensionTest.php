@@ -24,6 +24,9 @@ class IteratorExtensionTest extends TestCase
 
         $this->assertInstanceOf(Stream::class, $s);
         $this->assertNotSame($it, $s);
+
+
+        $this->assertSame($s, $s->streamify());
     }
 
     public function tesToArray()
@@ -170,6 +173,7 @@ class IteratorExtensionTest extends TestCase
 
         return [
             [$emptyIterator, null, null, 0],
+            [$emptyIterator, null, null, 0, function ($item) { return strpos($item, 'x') !== false; }],
             [$func, '0', 'kkx', 5],
             [$func, 'x', 'kkx', 3, function ($item) { return strpos($item, 'x') !== false; }],
             [$func, null, null, 1, function ($item) { return $item === null; }],

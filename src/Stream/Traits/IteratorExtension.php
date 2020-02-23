@@ -56,8 +56,6 @@ trait IteratorExtension
      * Return stream of current iterator object. If this object is stream, just return itself.
      *
      * @return Stream
-     *
-     * @throws Exception
      */
     public function streamify(): Stream
     {
