@@ -9,7 +9,6 @@ namespace Stream;
 
 use ArrayIterator;
 use Countable;
-use Exception;
 use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
@@ -88,8 +87,6 @@ class Stream implements Iterator, Countable
      * @param Iterator|IteratorAggregate|array $source The source object that want to become a stream.
      *
      * @return Stream
-     *
-     * @throws Exception
      */
     final public static function from($source): Stream
     {
@@ -259,40 +256,55 @@ class Stream implements Iterator, Countable
     }
 
     /**
+     * Skips certain number of items in the collection.
+     *
      * @param int $skip
      * @return Stream returns self
      */
-    public function skip($skip): Stream
+    public function skip(int $skip): Stream
     {
         $this->skip = $skip;
         return $this;
     }
 
     /**
+     * Limits the number of returning items.
+     *
      * @param int $limit
+     *
      * @return Stream returns self
      */
-    public function limit($limit): Stream
+    public function limit(int $limit): Stream
     {
         $this->limit = $limit;
         return $this;
     }
 
     /**
-     * @param callable|null $comparator
+     * Removes duplicate values from the collection.
+     *
+     * @param callable|null $hashFunc
+     *  Hash function for the values. The hashes of values will be
+     *  compared when this function is provided.
      *
      * @return Stream
      */
-    public function distinct(callable $comparator = null): Stream
+    public function distinct(callable $hashFunc = null): Stream
     {
-        $generator = function () use ($comparator) {
+        $generator = function () use ($hashFunc) {
             $set = [];
             foreach ($this as $key => $value) {
-                if (isset($set[$value])) {
+                if ($hashFunc !== null) {
+                    $hash = $hashFunc($value);
+                } else {
+                    $hash = $value;
+                }
+
+                if (isset($set[$hash])) {
                     continue;
                 }
 
-                $set[$value] = true;
+                $set[$hash] = true;
                 yield $key => $value;
             }
         };
@@ -362,7 +374,7 @@ class Stream implements Iterator, Countable
     /**
      * @return void
      */
-    private function multiSort()
+    private function multiSort(): void
     {
         if (!$this->sortPended || empty($this->sortingCommands)) {
             return;
@@ -402,9 +414,10 @@ class Stream implements Iterator, Countable
     /**
      * @param $array
      * @param SortingCommand[] $sortingCommands
+     *
      * @return array
      */
-    private function quickSort($array, $sortingCommands)
+    private function quickSort($array, $sortingCommands): array
     {
         if (count($array) < 2) {
             return $array;

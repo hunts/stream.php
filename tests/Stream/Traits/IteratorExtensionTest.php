@@ -10,49 +10,37 @@ namespace Stream\Traits;
 use PHPUnit\Framework\TestCase;
 use Stream\ComparatorFactory;
 use Stream\IteratorClass;
+use Stream\Stream;
 
 /**
  * Test cases for trait: {@see IteratorExtension}
  */
 class IteratorExtensionTest extends TestCase
 {
-    /**
-     * @param IteratorClass $it
-     * @param mixed $first
-     * @param mixed $last
-     * @param int $count
-     * @param callable $predicate
-     *
-     * @dataProvider dataProvider
-     */
-    public function tesStreamify(IteratorClass $it, $first, $last, int $count, callable $predicate = NULL)
+    public function testStreamify()
     {
-        try {
-            $this->assertSame($it, $it->streamify());
-        }catch (\Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $it = new IteratorClass();
+        $s = $it->streamify();
+
+        $this->assertInstanceOf(Stream::class, $s);
+        $this->assertNotSame($it, $s);
     }
 
-    /**
-     * @param IteratorClass $it
-     * @param mixed $first
-     * @param mixed $last
-     * @param int $count
-     * @param callable $predicate
-     *
-     * @dataProvider dataProvider
-     */
-    public function tesToArray(IteratorClass $it, $first, $last, int $count, callable $predicate = NULL)
+    public function tesToArray()
     {
-        $arr = $it->toArray($predicate);
+        $it = new IteratorClass(6);
+        $it[0] = 0;
+        $it[1] = 1;
+        $it[2] = 2;
+        $it[3] = 3;
+        $it[4] = 4;
+        $it[5] = 5;
 
-        if ($count > 0) {
-            $this->assertSame($first, $arr[0]);
-            $this->assertSame($last, $arr[$count - 1]);
-        } else {
-            $this->assertEmpty($arr);
-        }
+        $arr = $it->toArray(function ($value) {
+            return [$value * $value];
+        });
+
+        $this->assertEquals([0, 1, 4, 9, 16, 25], $arr);
     }
 
     /**

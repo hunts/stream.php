@@ -14,6 +14,21 @@ use PHPUnit\Framework\TestCase;
  */
 class StreamTest extends TestCase
 {
+    public function tesToArray()
+    {
+        $it = Stream::from([0, 1, 2, 3, 4, 5]);
+
+        $arr = $it->filter(function ($value) {
+            return $value % 2 == 1;
+        })->sortByDescending(
+            ComparatorFactory::intComparator()
+        )->toArray(function ($value) {
+            return [$value * $value];
+        });
+
+        $this->assertEquals([25, 9, 1], $arr);
+    }
+
     /**
      * @param $it
      *
@@ -29,7 +44,7 @@ class StreamTest extends TestCase
      *
      * @dataProvider dataProvider
      */
-    public function testTake($it)
+    public function testLimit($it)
     {
         $this->assertEquals(2, stream($it)->limit(2)->count());
     }
@@ -63,6 +78,23 @@ class StreamTest extends TestCase
                     return strpos($item, 'php') !== false;
                 }
             )->count());
+    }
+
+    public function testDistinct()
+    {
+        $stream = stream([5, 2, -2, 5, 0, 2]);
+
+        $this->assertEquals(
+            [0 => 5, 1 => 2, 2 => -2, 4 => 0],
+            $stream->distinct()->toArray()
+        );
+
+        $this->assertEquals(
+            [0 => 5, 1 => 2, 2 => -2],
+            $stream->distinct(function($value) {
+                return $value < 0 ? 0 : $value;
+            })->toArray()
+        );
     }
 
     public function testSort()

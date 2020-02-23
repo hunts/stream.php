@@ -13,8 +13,6 @@ if (!function_exists('stream')) {
      *
      * @param Iterator|IteratorAggregate|array $source
      * @return Stream returns a streaming object.
-     *
-     * @throws Exception
      */
     function stream($source): Stream
     {
