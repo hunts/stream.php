@@ -7,19 +7,17 @@ The stream.php library is a PHP implementation of collection query API similar t
 
 # Table of Contents
 -----
-1. [Installing](#installing)
-   * [Installation](#installation)
+1. [Installation](#Installation)
+   * [Composer](#composer)
 2. [Classes and methods](#classes-and-methods)
    * [Usage](#usage)
    * [Query API](#query-api)
    
 -----
 
-# Installing
+# Installation
 
-## Installation
-
-Via composer:
+## Composer
 
 ```shell script
 composer require hunts/stream.php
@@ -55,7 +53,7 @@ $stream = NumberStream::from([1, 2, 3]);
 
 ### Global functions
 
-_**Description**_: Instantiate a new Stream objects via global functions: stream() and number_stream()
+_**Description**_: Instantiate a new Stream object via global function: stream() or number_stream()
 
 ##### *Example*
 
@@ -66,67 +64,24 @@ $stream = number_stream([1, 2, 3]);
 
 ## Query API
  
-* [Filter](#filter) - Filter elements that match the give predicate
-* [First](#first) - Return the first element of matched items
-* [Last](#last) - Return the last element of matched items
-* [Max](#max) - TO BE DOCUMENTED
-* [Min](#min) - TO BE DOCUMENTED
-* [Any](#any) - TO BE DOCUMENTED
-* [All](#all) - TO BE DOCUMENTED
-* [Each](#each) - TO BE DOCUMENTED
-* [Map](#map) - TO BE DOCUMENTED
-* [MapToNumber](#maptonumber) - TO BE DOCUMENTED
-* [Reduce](#reduce) - TO BE DOCUMENTED
-* [Distinct](#distinct) - TO BE DOCUMENTED
-* [Sort](#sort) - TO BE DOCUMENTED
-* [SortByDescending](#sortbydescending) - TO BE DOCUMENTED
-* [Skip](#skip) - TO BE DOCUMENTED
-* [Limit](#limit) - TO BE DOCUMENTED
-* [Count](#count) - TO BE DOCUMENTED
-* [ToArray](#toarray) - TO BE DOCUMENTED
-
-### Filter
-
-_**Description**_: Returns a stream consisting of the elements of this
-stream that match the given predicate.
-
-##### *Example*
-
-~~~php
-// Find users whose first names are "John"
-$stream->filter(function(User $user) {
-    return $user->getFirstName() === 'John';
-});
-~~~
-
-### First
-
-_**Description**_: Returns the first element of matched items, or null
-if the stream is empty.
-
-##### *Example*
-
-~~~php
-// Find the first user whose age is 28
-$user = $stream->first(function(User $user) {
-    return $user->getAge() === 28;
-});
-~~~
-
-
-### Last
-
-_**Description**_: Returns the last element of matched items, or null
-if the stream is empty.
-
-##### *Example*
-
-~~~php
-// Find the last user whose age is 28
-$user = $stream->last(function(User $user) {
-    return $user->getAge() === 28;
-});
-~~~
+* [Filter](API.md#filter) - Filter elements that match the give predicate
+* [First](API.md#first) - Return the first element of matched items
+* [Last](API.md#last) - Return the last element of matched items
+* [Max](API.md#max)
+* [Min](API.md#min)
+* [Any](API.md#any)
+* [All](API.md#all)
+* [Each](API.md#each)
+* [Map](API.md#map)
+* [MapToNumber](API.md#maptonumber)
+* [Reduce](API.md#reduce)
+* [Distinct](API.md#distinct)
+* [Sort](API.md#sort)
+* [SortByDescending](API.md#sortbydescending)
+* [Skip](API.md#skip)
+* [Limit](API.md#limit)
+* [Count](API.md#count)
+* [ToArray](API.md#toarray)
 
 
 [travis-url]: https://travis-ci.org/hunts/stream.php
