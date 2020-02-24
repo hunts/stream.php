@@ -122,7 +122,7 @@ if the stream is empty.
 ##### *Example*
 
 ~~~php
-// Find the first user whose age is 28
+// Find the last user whose age is 28
 $user = $stream->last(function(User $user) {
     return $user->getAge() === 28;
 });

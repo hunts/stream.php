@@ -5,6 +5,7 @@
  * (c) Minghang Chen <chen@minghang.dev>
  */
 
+use Stream\NumberStream;
 use Stream\Stream;
 
 if (!function_exists('stream')) {
@@ -17,5 +18,18 @@ if (!function_exists('stream')) {
     function stream($source): Stream
     {
         return Stream::from($source);
+    }
+}
+
+if (!function_exists('number_stream')) {
+    /**
+     * Define stream function in Global.
+     *
+     * @param Iterator|IteratorAggregate|number[] $source
+     * @return NumberStream the new NumberStream object.
+     */
+    function number_stream($source): NumberStream
+    {
+        return NumberStream::from($source);
     }
 }
