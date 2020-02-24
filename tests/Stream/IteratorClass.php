@@ -5,11 +5,11 @@
  * (c) Minghang Chen <chen@minghang.dev>
  */
 
-namespace Stream;
+namespace Hunts\Stream;
 
+use Hunts\Stream\Traits\IteratorExtension;
 use Iterator;
 use SplFixedArray;
-use Stream\Traits\IteratorExtension;
 
 /**
  * An example class that implements the \Iterator interface.

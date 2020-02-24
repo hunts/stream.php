@@ -38,6 +38,8 @@ _**Description**_: Instantiate a new Stream object
 ##### *Example*
 
 ~~~php
+use Hunts\Stream;
+...
 $stream = Stream::from([$user1, $user2, $user3]);
 ~~~
 
@@ -48,6 +50,8 @@ _**Description**_: Instantiate a new NumberStream object
 ##### *Example*
 
 ~~~php
+use Hunts\Stream;
+...
 $stream = NumberStream::from([1, 2, 3]);
 ~~~
 

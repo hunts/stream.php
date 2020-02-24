@@ -5,11 +5,10 @@
  * (c) Minghang Chen <chen@minghang.dev>
  */
 
-namespace Stream\Traits;
+namespace Hunts\Stream\Traits;
 
-use Exception;
-use Stream\Comparator;
-use Stream\Stream;
+use Hunts\Stream\Comparator;
+use Hunts\Stream\Stream;
 
 /**
  * Useful methods for class that is going to implements Iterator interface.

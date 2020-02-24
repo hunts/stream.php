@@ -5,14 +5,14 @@
  * (c) Minghang Chen <chen@minghang.dev>
  */
 
-namespace Stream;
+namespace Hunts\Stream;
 
 use ArrayIterator;
 use Countable;
+use Hunts\Stream\Traits\IteratorExtension;
 use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
-use Stream\Traits\IteratorExtension;
 
 /**
  * Stream Class.

@@ -5,12 +5,12 @@
  * (c) Minghang Chen <chen@minghang.dev>
  */
 
-namespace Stream\Traits;
+namespace Hunts\Stream\Traits;
 
 use PHPUnit\Framework\TestCase;
-use Stream\ComparatorFactory;
-use Stream\IteratorClass;
-use Stream\Stream;
+use Hunts\Stream\ComparatorFactory;
+use Hunts\Stream\IteratorClass;
+use Hunts\Stream\Stream;
 
 /**
  * Test cases for trait: {@see IteratorExtension}

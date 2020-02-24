@@ -2,9 +2,9 @@
   "name": "hunts/stream.php",
   "description": "PHP implementation of collection query API similar to Java Stream API and .NET Linq",
   "keywords": [
-    "streaming api",
+    "stream api",
+    "stream.php",
     "php",
-    "stream",
     "linq"
   ],
   "type": "library",
@@ -26,7 +26,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Stream\\": "src/Stream"
+      "Hunts\\Stream\\": "src/Stream"
     },
     "files": [
       "src/index.php"
@@ -34,7 +34,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Stream\\": "tests/Stream"
+      "Hunts\\Stream\\": "tests/Stream"
     }
   },
   "scripts": {

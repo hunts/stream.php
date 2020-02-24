@@ -5,8 +5,8 @@
  * (c) Minghang Chen <chen@minghang.dev>
  */
 
-use Stream\NumberStream;
-use Stream\Stream;
+use Hunts\Stream\NumberStream;
+use Hunts\Stream\Stream;
 
 if (!function_exists('stream')) {
     /**

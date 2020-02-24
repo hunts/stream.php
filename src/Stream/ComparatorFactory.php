@@ -5,7 +5,7 @@
  * (c) Minghang Chen <chen@minghang.dev>
  */
 
-namespace Stream;
+namespace Hunts\Stream;
 
 /**
  * Static factory for creating comparator object.

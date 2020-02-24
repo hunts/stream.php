@@ -5,7 +5,7 @@
  * (c) Minghang Chen <chen@minghang.dev>
  */
 
-namespace Stream;
+namespace Hunts\Stream;
 
 /**
  * Represents sorting information which contains the SortOrder and an optional comparator object.

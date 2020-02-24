@@ -5,7 +5,7 @@
  * (c) Minghang Chen <chen@minghang.dev>
  */
 
-namespace Stream;
+namespace Hunts\Stream;
 
 /**
  * A sequence of primitive number-valued elements supporting sequential
